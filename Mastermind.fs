@@ -101,29 +101,36 @@ defer chk
 : sol! ( [guess] -- ) \ defines the solution
 	currycheck is chk ; 
 
+: solcompare ( p1 c1 p2 c2 -- p1 c1 bool ) 
+  2over rot = -rot = and ;
 
-: ?? ( [guess] -- ) chk swap  ." Pos: " . ." Col: " . ;
+: issol ( p c -- p c b ) fields 0 solcompare ;
 
+: ?? ( [guess] -- )
+	chk 2dup
+	swap
+	." Pos: " . ." Col: " . 
+	issol IF 
+		." Solved! " 
+	ELSE
+	ENDIF 
+	drop drop  ;
+	
 Variable seed
-
 $10450405 Constant generator
-
 : rnd  ( -- n )  seed @ generator um* drop 1+ dup seed ! ;
 : random ( n -- 0..n-1 )  rnd um* nip ;
 : rndsol ( -- [guess] ) nsol random cg ;
 : init ( -- ) rndsol sol! ; 
 
-510 cg sol!
+' init here nsol mod  times 
 
-: solcompare ( p1 c1 p2 c2 -- p1 c1 bool ) 
-  2over rot = -rot = and ;
 
-: issol ( p c -- p c b ) fields 0 solcompare ;
+
 \ put [1 ....... 1 ] in array 
 \ guess something consistent , loop through the array and look what is consistent
 \ repeat 
 : shittyknuth ( -- [guess] )
-	clearstack
 	here nsol cells allot
 	nsol  0 +DO
 		-1 over i cells + !
@@ -154,7 +161,7 @@ $10450405 Constant generator
 		1 +LOOP
 	REPEAT 
 	drop drop swap drop cg
-	cr  .s cr 
+	." The solution is: " swap 2swap swap 4x4roll . . . . 
 ;
 
 : tk rl cr cr clearstack shittyknuth ;  \ for debugging efficiently
