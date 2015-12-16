@@ -4,7 +4,7 @@
 \ generates the n-th possible solution in the given system (depending on base and fields)
 \ >[guess] sol! 
 \ defines the correct solution
-\ >[guess] chk
+\ >[guess] checks
 \ checks the guess - outputs the number of correct positions and colors 
 \ >[guess] [guess] check 
 \ outputs the number of matching positions and colors 
@@ -92,12 +92,17 @@
   
 : times { xt n -- }
   n 0 ?do xt execute loop ;
-  
+
+0 Value cnt  
+
 : currycheck ( x x x x -- xt2 )  
 \ call like this: 1 2 3 4 currychk is chk
- [ ' check ] literal [ ' curry ] literal fields times  ;
- 
-defer chk 
+ 0 to cnt [ ' check ] literal [ ' curry ] literal fields times  ;
+
+defer chk ( [guess] -- u u )
+: checks ( x x x x -- u u )
+	cnt 1 + dup ." Tries: " . cr to cnt chk ;
+
 : sol! ( [guess] -- ) \ defines the solution
 	currycheck is chk ; 
 
@@ -108,7 +113,7 @@ defer chk
 : issol ( p c -- p c b ) fields 0 solcompare ;
 	
 : ?? ( [guess] -- )
-	chk 2dup
+	checks 2dup
 	swap
 	." Pos: " . ." Col: " . 
 	issol IF 
@@ -142,7 +147,7 @@ init init init
 	511 
 	BEGIN
 		nsol mod
-		dup cg chk issol invert 
+		dup cg checks issol invert 
 	WHILE
 		nsol  0 +DO
 			2 pick cg i cg check
