@@ -1,4 +1,4 @@
-: rl s" test.fs" included ; 
+: rl s" Mastermind.fs" included ; 
 
 6 constant base
 4 constant fields
