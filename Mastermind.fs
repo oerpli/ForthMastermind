@@ -1,4 +1,4 @@
-: rl s" test.fs" included ; 
+: rl s" Mastermind.fs" included ; 
 \ Usage:
 \ >n createguess
 \ generates the n-th possible solution in the given system (depending on base and fields)
