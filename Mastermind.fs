@@ -12,6 +12,8 @@
 \ Playing:
 \ >init
 \ >[guess] ??
+\ >shittyknuth
+\ to solve the riddle with knuth's algorithm 
 
 \ [guess] always refers to "fields" numbers ( in interval [0,base[ ) 
 
