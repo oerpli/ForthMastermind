@@ -160,7 +160,7 @@ $10450405 Constant generator
 			ENDIF
 		1 +LOOP
 	REPEAT 
-	drop drop swap drop cg
+	drop drop swap nsol cells dump cg
 	." The solution is: " swap 2swap swap 4x4roll . . . . 
 ;
 
