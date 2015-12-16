@@ -1,4 +1,4 @@
-: rl s" test.fs" included ; 
+: rl s" Mastermind.fs" included ; 
 \ Usage:
 \ >n createguess
 \ generates the n-th possible solution in the given system (depending on base and fields)
@@ -11,7 +11,7 @@
 \ have fun!
 \ Playing:
 \ >init
-\ >[guess] ? 
+\ >[guess] ??
 
 \ [guess] always refers to "fields" numbers ( in interval [0,base[ ) 
 
@@ -38,7 +38,6 @@
 	negate
 ; 
 
-: ? ( [guess] -- ) chk swap  ." Pos: " . ." Col: " . ;
 
 
 : countc ( [guess1] [guess2] n -- u )  \ count number of correct occurences of number n in guess1
@@ -86,6 +85,7 @@ defer chk
 : exp ( u1 u2 -- u3 ) \ u3 = u1^u2
    over swap 1 ?do over * loop nip ;
 
+: ?? ( [guess] -- ) chk swap  ." Pos: " . ." Col: " . ;
 
 
 4 ' roll curry constant roll4 
@@ -103,4 +103,10 @@ defer chk
 	-rot drop drop ;
 
 	
-1 4 1 1 sol!
+Variable seed
+$10450405 Constant generator
+: rnd  ( -- n )  seed @ generator um* drop 1+ dup seed ! ;
+: random ( n -- 0..n-1 )  rnd um* nip ;
+: rndsol ( -- [guess] )
+	base fields exp random createguess ;
+: init ( -- ) rndsol sol! ; 
