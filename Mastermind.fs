@@ -1,4 +1,4 @@
-: rl s" Mastermind.fs" included ; 
+: rl s" test.fs" included ; 
 \ Usage:
 \ >n createguess
 \ generates the n-th possible solution in the given system (depending on base and fields)
@@ -9,6 +9,9 @@
 \ >[guess] [guess] check 
 \ outputs the number of matching positions and colors 
 \ have fun!
+\ Playing:
+\ >init
+\ >[guess] ? 
 
 \ [guess] always refers to "fields" numbers ( in interval [0,base[ ) 
 
@@ -23,8 +26,7 @@
 : guessover ( [guess1] [guess2] -- [guess1] [guess2] [guess1] )
 	fields 0 +DO
 		fields 2 * -1 + pick
-	1 +LOOP
-;
+	1 +LOOP ;
 
 : count ( [guess] n1 -- n1 u )
 \ how often is color n in guess u*fields
@@ -35,6 +37,9 @@
 	1 +LOOP
 	negate
 ; 
+
+: ? ( [guess] -- ) chk swap  ." Pos: " . ." Col: " . ;
+
 
 : countc ( [guess1] [guess2] n -- u )  \ count number of correct occurences of number n in guess1
 	count >r
@@ -61,8 +66,7 @@
 	1 -LOOP
 	negate
 	r>
-	over - 
-;
+	over - ;
 
 : curry ( x xt1 -- xt2 )
   swap 2>r :noname r> postpone literal r> compile, postpone ; ;
@@ -97,3 +101,6 @@ defer chk
 		mod
 	1 -LOOP  
 	-rot drop drop ;
+
+	
+1 4 1 1 sol!
