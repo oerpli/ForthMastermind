@@ -1,4 +1,16 @@
-: rl s" Mastermind.fs" included ; 
+: rl s" test.fs" included ; 
+\ Usage:
+\ >n createguess
+\ generates the n-th possible solution in the given system (depending on base and fields)
+\ >[guess] sol! 
+\ defines the correct solution
+\ >[guess] chk
+\ checks the guess - outputs the number of correct positions and colors 
+\ >[guess] [guess] check 
+\ outputs the number of matching positions and colors 
+\ have fun!
+
+\ [guess] always refers to "fields" numbers ( in interval [0,base[ ) 
 
 6 constant base
 4 constant fields
@@ -64,12 +76,16 @@
  
 defer chk 
 
+: sol! ( [guess] -- ) \ defines the solution
+	currycheck is chk ; 
 
 : exp ( u1 u2 -- u3 ) \ u3 = u1^u2
    over swap 1 ?do over * loop nip ;
 
 
-: 4x4roll 4 roll 4 roll 4 roll 4 roll ;
+
+4 ' roll curry constant roll4 
+: 4x4roll roll4 4 times ;
 
 : createguess ( number  -- u*fields fields base)
 	fields base rot
