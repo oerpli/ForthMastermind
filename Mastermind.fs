@@ -97,15 +97,15 @@
  [ ' check ] literal [ ' curry ] literal fields times  ;
  
 defer chk 
-
 : sol! ( [guess] -- ) \ defines the solution
 	currycheck is chk ; 
+
 
 : solcompare ( p1 c1 p2 c2 -- p1 c1 bool ) 
   2over rot = -rot = and ;
 
 : issol ( p c -- p c b ) fields 0 solcompare ;
-
+	
 : ?? ( [guess] -- )
 	chk 2dup
 	swap
@@ -115,22 +115,25 @@ defer chk
 	ELSE
 	ENDIF 
 	drop drop  ;
-	
+
 Variable seed
+
 $10450405 Constant generator
+
 : rnd  ( -- n )  seed @ generator um* drop 1+ dup seed ! ;
 : random ( n -- 0..n-1 )  rnd um* nip ;
 : rndsol ( -- [guess] ) nsol random cg ;
 : init ( -- ) rndsol sol! ; 
 
-' init here nsol mod  times 
+510 cg sol!
 
-
-
+: reverse ( x_1 x_2 ... x_n-1 x_n n -- x_n x_n-1 ... x_2 x_1 )
+ 0 u+do i roll loop ;
 \ put [1 ....... 1 ] in array 
 \ guess something consistent , loop through the array and look what is consistent
 \ repeat 
 : shittyknuth ( -- [guess] )
+	clearstack
 	here nsol cells allot
 	nsol  0 +DO
 		-1 over i cells + !
@@ -160,8 +163,10 @@ $10450405 Constant generator
 			ENDIF
 		1 +LOOP
 	REPEAT 
-	drop drop swap nsol cells dump cg
-	." The solution is: " swap 2swap swap 4x4roll . . . . 
+	drop drop swap nsol negate cells allot drop
+	dup cg
+	 ." The solution is: " fields reverse fields 0 u+do . loop 
+	 cg
 ;
 
 : tk rl cr cr clearstack shittyknuth ;  \ for debugging efficiently
