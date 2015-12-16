@@ -12,8 +12,6 @@
 \ Playing:
 \ >init
 \ >[guess] ??
-\ >shittyknuth
-\ to solve the riddle with knuth's algorithm 
 
 \ [guess] always refers to "fields" numbers ( in interval [0,base[ ) 
 
@@ -127,7 +125,7 @@ $10450405 Constant generator
 : rndsol ( -- [guess] ) nsol random cg ;
 : init ( -- ) rndsol sol! ; 
 
-510 cg sol!
+init init init 
 
 : reverse ( x_1 x_2 ... x_n-1 x_n n -- x_n x_n-1 ... x_2 x_1 )
  0 u+do i roll loop ;
