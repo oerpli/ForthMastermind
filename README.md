@@ -7,11 +7,12 @@ Mastermind implementation in Forth.
 * Use `shittyknuth` if you're to dense to solve it on your own. This runs an inefficient version of Knuth's mastermind algorithm and outputs the solution.
  
 #### Example 
+    init
+    0 2 3 1 ??
+    0 4 2 0 ??
+    shittyknuth 
+    ." Look mommy, I solved it!" cr
 
-  init
-  0 2 3 1 ?? 
-  0 3 1 2 ??
-  shittyknuth \ :'(
 
 ### Furth Notes
 * Number of possible colors (decoded as colors starting from 0) and fields (number of pins to guess) can be set to whatever you want.
