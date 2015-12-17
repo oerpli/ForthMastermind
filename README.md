@@ -14,6 +14,6 @@ Mastermind implementation in Forth.
     ." Look mommy, I solved it!" cr
 
 
-### Furth Notes
+### Further Notes
 * Number of possible colors (decoded as colors starting from 0) and fields (number of pins to guess) can be set to whatever you want.
 * This note is here to justify the plural in the title of this section.
