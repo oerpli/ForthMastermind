@@ -112,10 +112,7 @@ defer chk ( [guess] -- u u )
 	currycheck is chk ; 
 
 
-: prettyprint ( guessindex -- [guess] )
-	dup cg
-	." The solution is: " fields reverse fields 0 u+do . loop 
-	cg ;
+
 	
 : ?? ( [guess] -- )
 	checks 2dup
@@ -144,6 +141,11 @@ init init init
 \ guess something consistent , loop through the array and look what is consistent
 \ repeat 
 
+: prettyprint ( guessindex -- [guess] )
+	dup cg
+	." The solution is: " fields reverse fields 0 u+do . loop 
+	cg ;
+	
 : shittyknuth ( -- [guess] )
 	here nsol cells allot
 	nsol  0 +DO
