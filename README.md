@@ -22,7 +22,7 @@ Mastermind implementation in Forth.
 * Number of possible colors (decoded as colors starting from 0) and fields (number of pins to guess) can be set to whatever you want. We recommend to stay below 7 fields though - it soon gets slow. 
 * This note is here to justify the plural in the title of this section.
 
-## License 
+### License 
 The MIT License (MIT)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
