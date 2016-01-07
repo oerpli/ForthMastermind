@@ -1,7 +1,7 @@
 : rl s" Mastermind.fs" included ; 
 \ Usage:
 \ >n cg
-\ generates the n-th possible solution in the given system (depending on base and fields)
+\ generates the n-th possible solution in the given system (depending on colors and fields)
 \ >[guess] sol! 
 \ defines the correct solution
 \ >[guess] chk
@@ -14,20 +14,20 @@
 \ >[guess] ??
 \ >shittyknuth
 \ to solve the riddle with knuths algorithm
-\ [guess] always refers to "fields" numbers ( in interval [0,base[ ) 
+\ [guess] always refers to "fields" numbers ( in interval [0,colors[ ) 
 
-6 constant base
+6 constant colors
 4 constant fields
 
 
 : exp ( u1 u2 -- u3 ) \ u3 = u1^u2
    over swap 1 ?do over * loop nip ;
    
-: nsol ( -- n ) [ base fields exp ] literal ;
+: nsol ( -- n ) [ colors fields exp ] literal ;
 : 4x4roll 4 roll 4 roll 4 roll 4 roll ;
 : cg ( number  -- u*fields)
 	nsol mod
-	fields base rot
+	fields colors rot
 	0 3 pick 1 -
 	-DO
 		over i exp
@@ -68,11 +68,11 @@
 ;
 
 : checkc ( [guess] [guess]  -- u ) \ check number of correct colors
-	base 1 +DO
+	colors 1 +DO
 		guessover guessover
 	1 +LOOP
 	0
-	base 0 +DO
+	colors 0 +DO
 		i swap >r countc r> +  \ ugly hack to make return stack work in loop
 	1 +LOOP
 ;
@@ -112,8 +112,10 @@ defer chk ( [guess] -- u u )
 	currycheck is chk ; 
 
 
-
-
+: prettyprint ( guessindex -- [guess] )
+	dup cg
+	." The solution is: " fields reverse fields 0 u+do . loop 
+	cg ;
 	
 : ?? ( [guess] -- )
 	checks 2dup
@@ -141,8 +143,8 @@ init init init
 \ put [1 ....... 1 ] in array 
 \ guess something consistent , loop through the array and look what is consistent
 \ repeat 
+
 : shittyknuth ( -- [guess] )
-	clearstack
 	here nsol cells allot
 	nsol  0 +DO
 		-1 over i cells + !
@@ -173,9 +175,63 @@ init init init
 		1 +LOOP
 	REPEAT 
 	drop drop swap nsol negate cells allot drop
-	dup cg
-	 ." The solution is: " fields reverse fields 0 u+do . loop 
-	 cg
+	prettyprint
 ;
 
-: tk rl cr cr clearstack shittyknuth ;  \ for debugging efficiently
+\ get some values from the adress in the greatknuth function
+: lastsol ( addr -- addr ) dup @ -1 + 2 * 1 + cells + ;
+: lastres ( addr -- addr )  lastsol 1 cells + ;
+: soladdrn ( addr n -- addr ) 2 * 1 + cells + ;
+: resaddrn ( addr n -- addr ) 2 * 2 + cells + ;
+
+
+\ encode and decode the response in one integer 
+: encode ( a1 a2 -- a3 ) 4 lshift + ;
+: decode ( a3 -- a1 a2 ) dup 1 4 lshift mod swap 4 rshift ;
+
+
+\ these two functions are the same as those above but they dont leave the first response on the stack
+: solcompar ( p1 c1 p2 c2 -- bool )  \ same as solcompare but discards p1 and c1
+	rot = -rot = and ;
+: isol ( p c -- p c b ) fields 0 solcompar ;
+
+: greatknuth ( -- [guess] ) 
+	here 40 cells allot 					\ array that contains the guesses and the response.
+											\ 0th element is the current number of guesses so far
+											\ than the odd numbers are the guesses
+											\ even numbers are the responses encoded with encode (=> decode)
+	0 										\ first guess harcoded because why not
+	BEGIN
+		nsol mod 							\ make sure that it's not a too big index
+		over dup @ 1 + swap !  				\ increase counter by 1
+		2dup swap lastsol !					\ save guess at correct position
+		cg checks 							\ check guess
+		encode 2dup swap lastsol 1 cells + ! decode \ save answer at lastsol+1cell
+		isol invert 						\ check if its the correct solution and continue loop until this is the case
+	WHILE
+		nsol over lastsol @ 1 + +DO			\ loop from next guess to last guess
+			dup @ 0 +DO
+				dup i soladdrn @ cg			\ get ith guess
+				j cg 		 				\ get next guess
+				check 						\ check what would be the solution
+				2 pick i resaddrn @ decode 	\ get answer of ith guess - should be consistent 
+				solcompar invert 
+				if 
+					leave					\ if inconsistent to at least 1 previous solution leave
+				endif
+				\ if it came until here it is consistent if
+				\ i is equal to the amount of tries so far -1
+				dup @ -1 + i = if 
+					-1234 leave 			\ magic number to signal outer loop what to do (fuckthis)
+				endif
+			1 +LOOP
+			dup -1234 = if
+				drop i leave				\ drop the magic number and leave this loop 
+			endif 
+		1 +LOOP
+	REPEAT
+	lastsol @
+	prettyprint
+;
+
+: tk rl cr cr clearstack greatknuth ;  \ for debugging efficiently
