@@ -3,8 +3,9 @@ Mastermind implementation in Forth.
 
 ### Usage
 * Enter init to generate a new solution and then play.
-* Put numbers on the stack and then enter `??` to test the solution. Outputs number of correct colors (col) and correct color on correct position (pos) 
-* Use `shittyknuth` if you're to dense to solve it on your own. This runs an inefficient version of Knuth's mastermind algorithm and outputs the solution. If you're in time trouble use `greatknuth` instead as it's much faster!
+* Put numbers on the stack and then enter `??` to test the solution. Outputs number of correct colors (col) and correct color on correct position (pos) as well as the tries so far.
+* Use `shittyknuth` if you're to dense to solve it on your own. This runs an inefficient version of Knuth's mastermind algorithm and outputs the solution.
+* If you're in time trouble use `greatknuth` instead as it's much faster!
  
 #### Example usage
     init
@@ -32,13 +33,7 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-If the Author of the Software (the "Author") needs a place to crash and you have a sofa available, you should maybe give the Author a break and let him sleep on your couch.
-
-If you are caught in a dire situation wherein you only have enough time to save one person out of a group, and the Author is a member of that group, you must save the Author.
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
+If the Author of the Software (the "Author") needs a place to crash and you have a sofa available, you should maybe give the Author a break and let him sleep on your couch. If you are caught in a dire situation wherein you only have enough time to save one person out of a group, and the Author is a member of that group, you must save the Author. The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
