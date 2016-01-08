@@ -198,40 +198,36 @@ init init init
 : isol ( p c -- p c b ) fields 0 solcompar ;
 
 : greatknuth ( -- [guess] ) 
-	here 40 cells allot 					\ array that contains the guesses and the response.
-											\ 0th element is the current number of guesses so far
-											\ than the odd numbers are the guesses
-											\ even numbers are the responses encoded with encode (=> decode)
-	511 										\ first guess harcoded because why not
+	here 40 cells allot 	\ array that contains the guesses and the response.
+	\ 0th element is the current number of guesses so far
+	\ than the odd numbers are the guesses even numbers are the responses encoded with encode (=> decode)
+	511 				\ first guess harcoded because why not
 	BEGIN
 		over dup @ 1 + swap !  				\ increase counter by 1
-		2dup swap lastsol !					\ save guess at correct position
-		cg checks 							\ check guess
-		encode 2dup swap lastsol 1 cells + ! decode \ save answer at lastsol+1cell
-		isol invert 						\ check if its the correct solution and continue loop until this is the case
+		2dup swap lastsol !				\ save guess at correct position
+		cg checks 					\ check guess
+		encode 2dup swap lastsol 1 cells + ! decode 	\ save answer at lastsol+1cell
+		isol invert 					\ check if its the correct solution and continue loop until this is the case
 	WHILE
-		dup lastsol @ 1 + nsol + over lastsol @ 1 + +DO			\ loop from next guess to last guess
+		dup lastsol @ 1 + nsol + over lastsol @ 1 + +DO	\ loop from next guess to last guess
 			dup @ 0 +DO
-				dup i soladdrn @ cg			\ get ith guess
-				j cg 		 				\ get next guess
-				check 						\ check what would be the solution
+				dup i soladdrn @ cg		\ get ith guess
+				j cg 		 		\ get next guess
+				check 				\ check what would be the solution
 				2 pick i resaddrn @ decode 	\ get answer of ith guess - should be consistent 
 				solcompar invert 
 				if 
-					leave					\ if inconsistent to at least 1 previous solution leave
+					leave			\ if inconsistent to at least 1 previous solution leave
 				endif
-				\ if it came until here it is consistent if
-				\ i is equal to the amount of tries so far -1
-				dup @ -1 + i = if 
-					-1234 leave 			\ magic number to signal outer loop what to do (fuckthis)
+				dup @ -1 + i = if  		\ i is numguesses-1 => consistent to all previous guesses
+					-1234 leave 		\ magic number to signal outer loop what to do (fuckthis)
 				endif
 			1 +LOOP
 			dup -1234 = if
-				drop i leave				\ drop the magic number and leave this loop 
+				drop i leave			\ drop the magic number and leave this loop 
 			endif 
 		1 +LOOP
 	REPEAT
-	lastsol @ prettyprint
-;
+	lastsol @ prettyprint ;
 
 : tk rl cr cr clearstack greatknuth ;  \ for debugging efficiently
