@@ -18,7 +18,11 @@
 
 6 constant colors
 4 constant fields
-
+Variable out
+: on 1 out ! ;
+: off 0 out ! ;
+: output out @ ;
+on
 
 : exp ( u1 u2 -- u3 ) \ u3 = u1^u2
    over swap 1 ?do over * loop nip ;
@@ -106,7 +110,12 @@
 
 defer chk ( [guess] -- u u )
 : checks ( x x x x -- u u )
-	cnt 1 + dup ." Tries: " . cr to cnt chk issol IF cnt -1 + to cnt ELSE ENDIF ;
+	cnt 1 + dup
+	output if 
+		." Tries: " . cr
+	else  drop
+	endif
+	to cnt chk issol IF cnt -1 + to cnt ELSE ENDIF ;
 
 : sol! ( [guess] -- ) \ defines the solution
 	currycheck is chk ; 
@@ -142,8 +151,10 @@ init init init
 \ repeat 
 
 : prettyprint ( guessindex -- [guess] )
-	dup cg
-	." The solution is: " fields reverse fields 0 u+do . loop 
+	output if 
+		dup cg
+		." The solution is: " fields reverse fields 0 u+do . loop 
+	endif
 	cg ;
 	
 : shittyknuth ( -- [guess] )
@@ -234,6 +245,7 @@ init init init
 
 
 : test ( xt  -- )
+	off
 	utime 2>R
 	100 0 +DO 
 		dup
@@ -242,8 +254,9 @@ init init init
 			drop
 		1 +LOOP
 	1 +LOOP
-	utime 2R> D- cr cr cr
+	utime 2R> D- cr
 	<# # # # # # # [CHAR] . HOLD #S #> TYPE ."  seconds" 
+	on 
 ;
 : tests ' shittyknuth test ;
 : testg ' greatknuth test ;
