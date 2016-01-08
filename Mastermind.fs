@@ -202,16 +202,15 @@ init init init
 	\ 0th element is the current number of guesses so far
 	\ than the odd numbers are the guesses even numbers are the responses encoded with encode (=> decode)
 	here 40 cells allot
-	0 							\ first guess harcoded because why not
+	511							\ first guess harcoded because why not
 	BEGIN
-		nsol mod 					\ make sure that it's not a too big index
 		over dup @ 1 + swap !  				\ increase counter by 1
 		2dup swap lastsol !				\ save guess at correct position
 		cg checks 					\ check guess
 		encode 2dup swap lastsol 1 cells + ! decode	\ save answer at lastsol+1cell
 		isol invert 					\ check if its the correct solution and continue loop until this is the case
 	WHILE
-		nsol over lastsol @ 1 + +DO			\ loop from last guess +1  to next consistent guess
+		nsol over lastsol @ 1 + dup rot + swap +DO	\ loop from last guess +1  to next consistent guess
 			dup @ 0 +DO
 				dup i soladdrn @ cg		\ get ith guess
 				j cg 		 		\ get next guess
@@ -230,7 +229,7 @@ init init init
 			endif 
 		1 +LOOP
 	REPEAT
-	lastsol @ prettyprint					\ output formatted solution - maybe free array? no idea
+	lastsol @ nsol mod prettyprint					\ output formatted solution - maybe free array? no idea
 ;
 
 : tk rl cr cr clearstack greatknuth ;  \ for debugging efficiently
