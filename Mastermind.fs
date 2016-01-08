@@ -231,3 +231,19 @@ init init init
 	lastsol @ prettyprint ;
 
 : tk rl cr cr clearstack greatknuth ;  \ for debugging efficiently
+
+
+: test ( xt  -- )
+	utime 2>R
+	100 0 +DO 
+		dup
+		>r i cg sol! r> execute
+		fields 0 +DO	
+			drop
+		1 +LOOP
+	1 +LOOP
+	utime 2R> D- cr cr cr
+	<# # # # # # # [CHAR] . HOLD #S #> TYPE ."  seconds" 
+;
+: tests ' shittyknuth test ;
+: testg ' greatknuth test ;
